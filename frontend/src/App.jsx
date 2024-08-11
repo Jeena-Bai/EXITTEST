@@ -1,24 +1,19 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
-import{Router,Routes,Route} from 'react-router-dom'
-import Email from './components/Email'
-import Otp from './components/Otp'
-const App=() =>{
-  
+import React from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import Email from './components/Email';
+import Otp from './components/Otp';
+import Welcome from './components/welcome';
 
+function App() {
   return (
-    <>
   
-    <Routes>
+      <Routes>
         <Route path="/" element={<Email/>} />
-        <Route path="/verify-otp" element={<Otp/>} />
-        <Route path="/welcome" element={<div>Welcome!</div>} />
-    </Routes>
-
-    </>
-  )
+        <Route path="/enter-otp" element={<Otp/>} />
+        <Route path="/welcome" element={<Welcome />} />
+      </Routes>
+ 
+  );
 }
 
-export default App
+export default App;

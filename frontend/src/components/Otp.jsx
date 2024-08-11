@@ -1,41 +1,38 @@
-import React from 'react'
+import React, { useState } from 'react';
 import axios from 'axios';
-import{useState} from 'react'
-const Otp = () => {
-    const [otp, setOtp] = useState('');
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        const otpSession = window.localStorage.getItem('otpSession');
+import { useNavigate } from 'react-router-dom';
 
-        try {
-            const response = await axios.post('/api/verify-otp', { otp, otpSession });
-            if (response.data.success) {
-                window.location.href = '/welcome';
-            } else {
-                alert("Invalid OTP. Please try again.");
-            }
-        } catch (error) {
-            console.error("Error verifying OTP", error);
-            alert("Failed to verify OTP. Please try again.");
-        }
-    };
+function Otp() {
+  const [otp, setOtp] = useState('');
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await axios.post('http://localhost:5000/api/verify-otp', { otp });
+      if (response.data.success) {
+        navigate('/welcome');
+      } else {
+        alert('Invalid OTP');
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   return (
-    <div>
-    
+    <form onSubmit={handleSubmit}>
+      <label>Enter OTP</label>
+      <input
+        type="text"
+        value={otp}
+        onChange={(e) => setOtp(e.target.value)}
+        required
+      />
+      <button type="submit">Submit</button>
+    </form>
+  );
+}
 
-        <form onSubmit={handleSubmit}>
-            <label>Enter OTP:</label>
-            <input 
-                type="text" 
-                value={otp} 
-                onChange={(e) => setOtp(e.target.value)} 
-                required 
-            />
-            <button type="submit">Submit</button>
-        </form>
-        </div>
-  )}
+export default Otp;
 
-
-
-export default Otp

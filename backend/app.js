@@ -1,16 +1,20 @@
-const express=require('express')
-const app=new express()
-const mongoose=require('mongoose')
-const morgan=require('morgan')
-const cors=require('cors')
-app.use(cors())
-require('dotenv').config()
-app.use(express.json())
-require('./db/connect')
-require('./models/OtpModel')
+const express = require('express');
+const cors = require('cors');
 
-require('./routes/OtpRoutes')
-require('./routes/OtpVerify')
-app.listen(process.env.PORT,()=>{
-    console.log(`Server is listening to port ${process.env.PORT}`)
-})
+const otpRoutes = require('./routes/OtpRoutes');
+const mongoose=require('mongoose')
+
+require('./db/connect')
+const app = express();
+app.use(express.json());
+app.use(cors());
+
+// Connect to MongoDB
+
+// Use routes
+app.use('/api', otpRoutes);
+
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
+});

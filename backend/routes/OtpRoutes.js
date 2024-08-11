@@ -1,43 +1,16 @@
 const express = require('express');
-const nodemailer = require('nodemailer');
-const { v4: uuidv4 } = require('uuid');
-const OTP = require('../models/OtpModel'); // Assuming you have an OTP model in Mongoose
 
+const app=new express()
+const cors=require('cors')
+const { sendOtp, verifyOtp } = require('../controllers/otpController');
 const router = express.Router();
-app.use(express.json())
-router.post('http//localhost:3000/api/send-otp', async (req, res) => {
-    const { email } = req.body;
-    const otp = Math.floor(100000 + Math.random() * 900000); // Generate a 6-digit OTP
-    const otpSession = uuidv4(); // Unique identifier for the OTP session
+app.use(express.json());  
+app.use(cors()); 
+// POST /api/send-otp - Send OTP to user's email
+router.post('/send-otp', sendOtp);
 
-    try {
-        // Save OTP and session to the database
-        const newOtp = new OTP({ otp, otpSession, email, createdAt: new Date() });
-        await newOtp.save();
-
-        // Send OTP to email using Nodemailer
-        let transporter = nodemailer.createTransport({
-            service: 'Gmail',
-            auth: {
-                user: 'your-email@gmail.com',
-                pass: process.env.App_Password,
-            },
-        });
-
-        let mailOptions = {
-            from: 'jeenabai2015@gmail.com',
-            to: email,
-            subject: 'Your OTP Code',
-            text: `Your OTP code is ${otp}`,
-        };
-
-        await transporter.sendMail(mailOptions);
-
-        res.json({ success: true, otpSession });
-    } catch (error) {
-        console.error("Error sending OTP", error);
-        res.status(500).json({ success: false, error: 'Failed to send OTP' });
-    }
-});
+// POST /api/verify-otp - Verify the entered OTP
+router.post('/verify-otp', verifyOtp);
 
 module.exports = router;
+
