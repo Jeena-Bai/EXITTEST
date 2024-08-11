@@ -1,0 +1,16 @@
+const express=require('express')
+const app=new express()
+const mongoose=require('mongoose')
+const morgan=require('morgan')
+const cors=require('cors')
+app.use(cors())
+require('dotenv').config()
+app.use(express.json())
+require('./db/connect')
+require('./models/OtpModel')
+
+require('./routes/OtpRoutes')
+require('./routes/OtpVerify')
+app.listen(process.env.PORT,()=>{
+    console.log(`Server is listening to port ${process.env.PORT}`)
+})
